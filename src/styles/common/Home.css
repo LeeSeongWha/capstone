@@ -1,0 +1,9 @@
+#data {
+    display: flex;
+    flex-direction: row;
+}
+
+#prediction{
+    display: flex;
+    flex-direction: row;
+}
