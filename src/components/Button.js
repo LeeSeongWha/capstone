@@ -12,10 +12,14 @@ const Button = () => {
             setIsAuto((e) => !e);
           }}
         >
-          {isAuto ? "유입수 수동" : "유입수 자동"}
+          {isAuto ? "산소발생기 수동" : "산소발생기 자동"}
         </button>
       </div>
-      {isAuto ? <div>유입수 자동: ON</div> : <div>유입수 자동: OFF</div>}
+      {isAuto ? (
+        <div>산소발생기 자동: ON</div>
+      ) : (
+        <div>산소발생기 자동: OFF</div>
+      )}
     </>
   );
 };
