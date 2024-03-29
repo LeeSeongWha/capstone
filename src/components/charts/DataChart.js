@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,8 +10,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
-import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -42,42 +41,6 @@ const options = {
     },
   },
 };
-
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: "수온",
-//       data: [32, 42, 51, 60, 51, 95, 97], // 데이터 실시간으로 받아오기
-//       backgroundColor: "#0CD3FF",
-//       borderColor: "#0CD3FF",
-//     },
-//     {
-//       label: "용존 산소 농도",
-//       data: [37, 42, 41, 37, 31, 44, 42], // 데이터 실시간으로 받아오기
-//       backgroundColor: "#a6120d",
-//       borderColor: "#a6120d",
-//     },
-//     {
-//       label: "pH농도",
-//       data: [60, 54, 54, 28, 27, 49, 52], // 데이터 실시간으로 받아오기
-//       backgroundColor: "#FFCA29",
-//       borderColor: "#FFCA29",
-//     },
-//     {
-//       label: "염도",
-//       data: [20, 24, 27, 28, 30, 31, 27], // 데이터 실시간으로 받아오기
-//       backgroundColor: "#A9A6A7",
-//       borderColor: "#A9A6A7",
-//     },
-//     {
-//       label: "용존 산소 예측값",
-//       data: [null, null, null, null, null, null, 37, 42, 52, 47], // 용존 산소 예측값
-//       backgroundColor: "#ff0000",
-//       borderColor: "#ff0000",
-//     },
-//   ],
-// };
 
 // 초기 데이터 설정
 const initialData = {
@@ -117,7 +80,10 @@ const initialData = {
 };
 
 const DataChart = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(() => {
+    const savedData = localStorage.getItem("chartData");
+    return savedData ? JSON.parse(savedData) : initialData;
+  });
 
   useEffect(() => {
     // 여기서 API 호출 및 데이터 설정
@@ -142,6 +108,9 @@ const DataChart = () => {
         // "염도" 데이터셋 업데이트
 
         // "용존 산소 농도 예측값" 데이터셋 업데이트
+
+        // 데이터 저장
+        localStorage.setItem("chartData", JSON.stringify(newData));
 
         // 전체 데이터 업데이트
         setData(newData);
