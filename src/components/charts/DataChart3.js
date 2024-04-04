@@ -89,7 +89,7 @@ const DataChart3 = () => {
   // }, []);
   return (
     <div>
-      <div style={{ width: 400, height: 300 }}>
+      <div style={{ width: 400, height: 200 }}>
         <Line options={options} data={data} />
       </div>
     </div>

@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const ToggleContainer = styled.div`
   position: relative;
-  width: 50px; /* 추가된 값 */
-  height: 24px; /* 추가된 값 */
+  width: 50px;
+  height: 24px;
   left: 85%;
   cursor: pointer;
   > .toggle-container {

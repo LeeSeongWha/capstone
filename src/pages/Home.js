@@ -12,15 +12,20 @@ class Home extends React.Component {
     return (
       <>
         <div id="data">
-          <div id="data-button">
+          <div className="section">
+            <h1>유입수</h1>
             <DataChart />
             <Button />
           </div>
-          <div>
+          <hr className="divider" />
+          <div className="section">
+            <h1>수조1</h1>
             <DataChart2 />
             <Button />
           </div>
-          <div>
+          <hr className="divider" />
+          <div className="section">
+            <h1>수조2</h1>
             <DataChart3 />
             <Button />
           </div>

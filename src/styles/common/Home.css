@@ -1,13 +1,26 @@
-div{
-    height: 200px;
-}
 #data {
-    display: flex;
-    flex-direction: row;
-    height: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-#prediction{
-    display: flex;
-    flex-direction: row;
+#prediction {
+  display: flex;
+  flex-direction: row;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+}
+
+.section h1 {
+  margin-bottom: px; /* 제목 아래 여백 추가 */
+}
+
+.divider {
+  margin: 100px;
+  height: 300px;
 }
