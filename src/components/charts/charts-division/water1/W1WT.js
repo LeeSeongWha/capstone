@@ -11,7 +11,6 @@ import {
   Legend,
   TimeScale,
 } from "chart.js";
-import "chartjs-adapter-date-fns";
 import { ko } from "date-fns/locale";
 
 ChartJS.register(

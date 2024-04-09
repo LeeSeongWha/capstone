@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import "chartjs-adapter-moment";
 import { ko } from "date-fns/locale";
 
 ChartJS.register(
