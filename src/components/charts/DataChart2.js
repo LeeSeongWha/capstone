@@ -61,7 +61,7 @@ export const data = {
 
     {
       label: "용존 산소 예측값",
-      data: [null, null, null, null, null, null, 37, 42, 52, 47], // 용존 산소 예측값
+      data: [null, null, null, null, null, null, null, 42, 52, 47], // 용존 산소 예측값
       backgroundColor: "#ff0000",
       borderColor: "#ff0000",
     },

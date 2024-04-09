@@ -10,8 +10,8 @@ import "../styles/common/Home.css";
 class Home extends React.Component {
   render() {
     return (
-      <>
-        <div id="data">
+      <div className="body">
+        <div className="data">
           <div className="section">
             <h1>유입수</h1>
             <DataChart />
@@ -30,7 +30,7 @@ class Home extends React.Component {
             <Button />
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

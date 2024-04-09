@@ -1,9 +1,9 @@
 import React from "react";
 
-class Settings extends React.Component {
+class Water2 extends React.Component {
   render() {
     return <div></div>;
   }
 }
 
-export default Settings;
+export default Water2;

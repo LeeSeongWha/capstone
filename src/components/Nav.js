@@ -9,7 +9,13 @@ const Nav = () => {
         <NavLink to="/">Home</NavLink>
       </div>
       <div>
-        <NavLink to="/settings">Settings</NavLink>
+        <NavLink to="/water1">유입수</NavLink>
+      </div>
+      <div>
+        <NavLink to="/water2">수조1</NavLink>
+      </div>
+      <div>
+        <NavLink to="/water3">수조2</NavLink>
       </div>
     </nav>
   );
