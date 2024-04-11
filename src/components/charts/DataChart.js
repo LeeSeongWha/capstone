@@ -105,6 +105,9 @@ const options = {
         maxTicksLimit: 8, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
       },
     },
+    y: {
+      beginAtZero: true,
+    },
   },
   plugins: {
     legend: {
@@ -128,22 +131,22 @@ const initialData = {
       label: "pH농도",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
       data: formattedData2,
-      backgroundColor: "#a6120d",
-      borderColor: "#a6120d",
+      backgroundColor: "#FFCA29",
+      borderColor: "#FFCA29",
     },
     {
       label: "염도",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
       data: formattedData3,
-      backgroundColor: "#FFCA29",
-      borderColor: "#FFCA29",
+      backgroundColor: "#A9A6A7",
+      borderColor: "#A9A6A7",
     },
     {
       label: "용존 산소량",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
       data: formattedData4,
-      backgroundColor: "#A9A6A7",
-      borderColor: "#A9A6A7",
+      backgroundColor: "#a6120d",
+      borderColor: "#a6120d",
     },
     {
       label: "용존 산소 예측량",
@@ -241,7 +244,7 @@ const DataChart = () => {
   // }, []);
   return (
     <div>
-      <div style={{ width: 500, height: 250 }}>
+      <div style={{ width: 400, height: 300 }}>
         <Line options={options} data={initialData} />
       </div>
     </div>
