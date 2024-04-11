@@ -23,13 +23,17 @@ ChartJS.register(
 );
 
 const now = new Date();
-const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 전
-const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 후
 const dataPoints = [35, 36, 36, 35, 35, 34, 35, 36]; // 기존의 데이터 배열
+
+const beforeAtNow = new Date(
+  now.getTime() - (dataPoints.length - 1) * 30 * 60 * 1000
+); // 현재 시간으로부터 2시간 전
+
+const hourLater = new Date(now.getTime() + 1 * 30 * 60 * 1000);
 
 const formattedData = dataPoints.map((value, index) => {
   return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
+    x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
     y: value,
   };
 });
@@ -49,8 +53,8 @@ const options = {
         unit: "minute",
         stepSize: 30,
       },
-      min: twoHoursAgo.getTime(), // 현재 시간을 원점으로 설정
-      max: twoHoursLater.getTime(),
+      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
+      max: hourLater.getTime(),
       adapters: {
         date: {
           locale: ko,
