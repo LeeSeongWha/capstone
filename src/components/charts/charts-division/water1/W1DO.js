@@ -24,21 +24,36 @@ ChartJS.register(
 );
 
 const now = new Date();
-const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 전
-const twoHoursLater = new Date(now.getTime() + 4 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 후
-const dataPoints = [20, 19, 20, 21, 22, 23, 25, 30]; // 기존의 데이터 배열
-const dataPointsPred = [null, null, null, null, null, null, null, null, 27, 23];
+const dataPoints = [7, 7.6, 7.5, 8.1, 7.9, 8, 8.1, 8.2]; // 기존의 데이터 배열
+const dataPointsPred = [
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  7.6,
+  7.1,
+];
+
+const beforeAtNow = new Date(
+  now.getTime() - (dataPoints.length - 1) * 30 * 60 * 1000
+); // 현재 시간으로부터 2시간 전
+
+const hourLater = new Date(now.getTime() + 3 * 30 * 60 * 1000);
 
 const formattedData = dataPoints.map((value, index) => {
   return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000),
+    x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000),
     y: value,
   };
 });
 
 const formattedDataPred = dataPointsPred.map((value, index) => {
   return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000),
+    x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000),
     y: value,
   };
 });
@@ -58,8 +73,8 @@ const options = {
         unit: "minute",
         stepSize: 30,
       },
-      min: twoHoursAgo.getTime(), // 현재 시간을 원점으로 설정
-      max: twoHoursLater.getTime(),
+      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
+      max: hourLater.getTime(),
       adapters: {
         date: {
           locale: ko,

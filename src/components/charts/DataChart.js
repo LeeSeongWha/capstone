@@ -24,59 +24,30 @@ ChartJS.register(
 );
 
 const now = new Date();
-const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 전
-const twoHoursLater = new Date(now.getTime() + 4 * 60 * 60 * 1000); // 현재 시간으로부터 2시간 후
-const dataPointsWT = [20, 19, 20, 21, 22, 23, 25, 26]; // 기존의 데이터 배열
-const dataPointsPH = [6, 5.8, 6.1, 6, 6.1, 6.2, 6.3, 6.5]; // 기존의 데이터 배열
-const dataPointsST = [35, 36, 36, 35, 35, 34, 35, 36]; // 기존의 데이터 배열
-const dataPointsDO = [7, 7.6, 7.5, 8.1, 7.9, 8, 8.1, 8.2]; // 기존의 데이터 배열
-const dataPointsDOPred = [
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  7.6,
-  7.1,
+const twoHoursLater = new Date(now.getTime() + 3 * 30 * 60 * 1000); // 현재 시간으로부터 2시간 후
+
+function formatDataSets(dataPoints, beforeAtNow) {
+  return dataPoints.map((dataSet) =>
+    dataSet.map((value, index) => ({
+      x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
+      y: value,
+    }))
+  );
+}
+
+const dataPoints = [
+  [20, 19, 20, 21, 22, 23, 25, 26],
+  [6, 5.8, 6.1, 6, 6.1, 6.2, 6.3, 6.5],
+  [35, 36, 36, 35, 35, 34, 35, 36],
+  [7, 7.6, 7.5, 8.1, 7.9, 8, 8.1, 8.2],
+  [null, null, null, null, null, null, null, null, 7.6, 7.1],
 ];
 
-const formattedData1 = dataPointsWT.map((value, index) => {
-  return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
-  };
-});
+const beforeAtNow = new Date(
+  now.getTime() - (dataPoints[0].length - 1) * 30 * 60 * 1000
+);
 
-const formattedData2 = dataPointsPH.map((value, index) => {
-  return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
-  };
-});
-
-const formattedData3 = dataPointsST.map((value, index) => {
-  return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
-  };
-});
-
-const formattedData4 = dataPointsDO.map((value, index) => {
-  return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
-  };
-});
-
-const formattedData5 = dataPointsDOPred.map((value, index) => {
-  return {
-    x: new Date(twoHoursAgo.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
-  };
-});
+const formattedDataSets = formatDataSets(dataPoints, beforeAtNow);
 
 const options = {
   responsive: true,
@@ -93,7 +64,7 @@ const options = {
         unit: "minute",
         stepSize: 30,
       },
-      min: twoHoursAgo.getTime(), // 현재 시간을 원점으로 설정
+      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
       max: twoHoursLater.getTime(),
       adapters: {
         date: {
@@ -102,8 +73,11 @@ const options = {
       },
       ticks: {
         autoSkip: true,
-        maxTicksLimit: 8, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
+        maxTicksLimit: 13, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
       },
+    },
+    y: {
+      beginAtZero: true,
     },
   },
   plugins: {
@@ -120,35 +94,35 @@ const initialData = {
     {
       label: "수온",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData1,
+      data: formattedDataSets[0],
       backgroundColor: "#0CD3FF",
       borderColor: "#0CD3FF",
     },
     {
       label: "pH농도",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData2,
-      backgroundColor: "#a6120d",
-      borderColor: "#a6120d",
-    },
-    {
-      label: "염도",
-      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData3,
+      data: formattedDataSets[1],
       backgroundColor: "#FFCA29",
       borderColor: "#FFCA29",
     },
     {
-      label: "용존 산소량",
+      label: "염도",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData4,
+      data: formattedDataSets[2],
       backgroundColor: "#A9A6A7",
       borderColor: "#A9A6A7",
     },
     {
+      label: "용존 산소량",
+      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
+      data: formattedDataSets[3],
+      backgroundColor: "#a6120d",
+      borderColor: "#a6120d",
+    },
+    {
       label: "용존 산소 예측량",
       // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData5,
+      data: formattedDataSets[4],
       backgroundColor: "#ff0000",
       borderColor: "#ff0000",
     },
@@ -213,6 +187,7 @@ const DataChart = () => {
 
   //       // 여기서 jsonData를 기반으로 newData.datasets의 각 데이터셋을 업데이트
   //       // "수온" 데이터셋 업데이트
+
   //       newData.datasets[0].data = jsonData.map((item) => item.id);
   //       // "용존 산소 농도" 데이터셋 업데이트
 
@@ -241,9 +216,7 @@ const DataChart = () => {
   // }, []);
   return (
     <div>
-      <div style={{ width: 500, height: 250 }}>
-        <Line options={options} data={initialData} />
-      </div>
+      <Line options={options} data={initialData} height={300} width={400} />
     </div>
   );
 };
