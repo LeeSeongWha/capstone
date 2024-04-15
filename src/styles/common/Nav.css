@@ -1,18 +1,30 @@
 nav {
+  display: flex;
   position: fixed;
   top: 0;
-  left: 0;
-  width: 60px;
-  height: 100%;
-
-  flex-direction: column;
-  display: flex;
-  border: solid 2px;
+  background-color: #333;
+  padding: 10px 20px;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-nav > div {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+nav div {
+  margin: 0 10px;
+}
+
+nav a {
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+nav a:hover {
+  background-color: #555;
+  color: #ddd;
+}
+
+nav a.active {
+  background-color: #007bff;
+  color: white;
 }

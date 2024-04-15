@@ -15,7 +15,7 @@ class Home extends React.Component {
           <div className="section">
             <h1>유입수</h1>
             <DataChart />
-            <Button />
+            <Button className="Button" />
           </div>
           <hr className="divider" />
           <div className="section">

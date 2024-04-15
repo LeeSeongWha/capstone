@@ -1,4 +1,4 @@
-.body {
+/* .body {
   margin-left: 70px;
 }
 
@@ -16,10 +16,50 @@
 }
 
 .section h1 {
-  margin-bottom: px; /* 제목 아래 여백 추가 */
+  margin-bottom: px; 
 }
 
 .divider {
   margin: 50px;
   height: 300px;
+} */
+
+.body {
+  background-color: #f4f4f4;
+  padding: 45px;
+}
+
+.section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  color: #333;
+  font-size: 24px;
+}
+
+.divider {
+  border: none;
+  height: 2px;
+  background-color: #e0e0e0;
+  margin: 20px 0;
+}
+
+.Button {
+  margin-left: auto;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.Button:hover {
+  background-color: #0056b3;
 }
