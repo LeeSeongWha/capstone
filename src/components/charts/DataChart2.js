@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import "chartjs-adapter-moment";
+import { ko } from "date-fns/locale";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,8 +13,6 @@ import {
   Legend,
 } from "chart.js";
 
-import { useEffect, useState } from "react";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,7 +23,29 @@ ChartJS.register(
   Legend
 );
 
-const labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; // 현재값 + 이후의 값
+const now = new Date();
+const twoHoursLater = new Date(now.getTime() + 3 * 30 * 60 * 1000); // 현재 시간으로부터 2시간 후
+
+function formatDataSets(dataPoints, beforeAtNow) {
+  return dataPoints.map((dataSet) =>
+    dataSet.map((value, index) => ({
+      x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
+      y: value,
+    }))
+  );
+}
+
+const dataPoints = [
+  [20, 19, 20, 21, 22, 23, 25, 26],
+  [7, 7.6, 7.5, 8.1, 7.9, 8, 8.1, 8.2],
+  [null, null, null, null, null, null, null, null, 7.6, 7.1],
+];
+
+const beforeAtNow = new Date(
+  now.getTime() - (dataPoints[0].length - 1) * 30 * 60 * 1000
+);
+
+const formattedDataSets = formatDataSets(dataPoints, beforeAtNow);
 
 const options = {
   responsive: true,
@@ -34,6 +57,25 @@ const options = {
       grid: {
         display: false,
       },
+      type: "time",
+      time: {
+        unit: "minute",
+        stepSize: 30,
+      },
+      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
+      max: twoHoursLater.getTime(),
+      adapters: {
+        date: {
+          locale: ko,
+        },
+      },
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 13, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
+      },
+    },
+    y: {
+      beginAtZero: true,
     },
   },
   plugins: {
@@ -43,25 +85,28 @@ const options = {
   },
 };
 
-export const data = {
-  labels,
+// 초기 데이터 설정
+const initialData = {
+  // labels,
   datasets: [
     {
       label: "수온",
-      data: [32, 42, 51, 60, 51, 95, 97], // 데이터 실시간으로 받아오기
+      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
+      data: formattedDataSets[0],
       backgroundColor: "#0CD3FF",
       borderColor: "#0CD3FF",
     },
     {
-      label: "용존 산소 농도",
-      data: [37, 42, 41, 37, 31, 44, 42], // 데이터 실시간으로 받아오기
+      label: "용존 산소량",
+      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
+      data: formattedDataSets[1],
       backgroundColor: "#a6120d",
       borderColor: "#a6120d",
     },
-
     {
-      label: "용존 산소 예측값",
-      data: [null, null, null, null, null, null, null, 42, 52, 47], // 용존 산소 예측값
+      label: "용존 산소 예측량",
+      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
+      data: formattedDataSets[2],
       backgroundColor: "#ff0000",
       borderColor: "#ff0000",
     },
@@ -90,7 +135,7 @@ const DataChart2 = () => {
   // }, []);
   return (
     <div>
-      <Line options={options} data={data} height={300} width={400} />
+      <Line options={options} data={initialData} height={300} width={400} />
     </div>
   );
 };

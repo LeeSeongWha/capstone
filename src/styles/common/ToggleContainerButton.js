@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
 export const ToggleContainer = styled.div`
-  position: relative;
+  position: absolute;
   width: 50px;
   height: 24px;
-  left: 85%;
+  left: 96%;
+  top: 2%;
   cursor: pointer;
   > .toggle-container {
     width: 50px;
@@ -37,4 +38,7 @@ export const ToggleContainer = styled.div`
 export const Desc = styled.div`
   text-align: right;
   margin: 10px;
+  top: 5%;
+  left: 92%;
+  position: absolute;
 `;

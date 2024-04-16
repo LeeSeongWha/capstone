@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import "chartjs-adapter-moment";
+import { ko } from "date-fns/locale";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +12,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "chartjs-adapter-moment";
-import { ko } from "date-fns/locale";
 
 ChartJS.register(
   CategoryScale,
