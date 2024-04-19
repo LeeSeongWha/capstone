@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import "chartjs-adapter-date-fns";
@@ -12,9 +12,9 @@ import {
   Legend,
   TimeScale,
 } from "chart.js";
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
 
-const W1SALT = () => {
+ChartJS.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
+const DataChartEx = () => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,16 +28,36 @@ const W1SALT = () => {
         "http://13.209.98.150:7355/api/test?tankid=iw1"
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
+      console.log(dataPoints);
+
+      const response_pred = await axios.get(
+        "http://13.209.98.150:7355/api/pdo?tankid=iw1"
+      );
+      const dataPointPred = response_pred.data;
 
       // 데이터 포맷팅
       const formattedDataSets = formatDataSets(dataPoints);
+      const formattedPredData = formatPredictionData(dataPointPred);
 
+      const formattedAllData = [...formattedDataSets, formattedPredData];
+
+      console.log(formattedAllData);
       setChartData({
-        datasets: formattedDataSets.map((dataset) => ({
-          label: "염도",
+        datasets: formattedAllData.map((dataset, index) => ({
+          label: ["수온", "염도", "pH농도", "용존산소", "용존산소 예측값"][
+            index
+          ],
           data: dataset,
-          backgroundColor: "#A9A6A7",
-          borderColor: "#A9A6A7",
+          backgroundColor: [
+            "#0CD3FF",
+            "#A9A6A7",
+            "#FFCA29",
+            "#FF8C00",
+            "#FF0000",
+          ][index],
+          borderColor: ["#0CD3FF", "#A9A6A7", "#FFCA29", "#FF8C00", "#FF0000"][
+            index
+          ],
         })),
       });
     } catch (error) {
@@ -62,13 +82,13 @@ const W1SALT = () => {
       ) : error ? (
         <p>{error}</p>
       ) : (
-        <Line data={chartData} options={options} height={200} width={400} />
+        <Line data={chartData} options={options} height={300} width={400} />
       )}
     </div>
   );
 };
 
-export default W1SALT;
+export default DataChartEx;
 
 function formatDataSets(dataPoints) {
   // 필터링하여 30분 간격의 데이터만 추출
@@ -79,10 +99,37 @@ function formatDataSets(dataPoints) {
 
   const temperatures = filteredDataPoints.map((dp) => ({
     x: parseDate(dp.time),
+    y: dp.wt,
+  }));
+  const salinities = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
     y: dp.sa,
   }));
+  const pHLevels = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.ph,
+  }));
 
-  return [temperatures];
+  const dissolvedOxygen = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.wdo,
+  }));
+
+  return [temperatures, salinities, pHLevels, dissolvedOxygen];
+}
+
+function formatPredictionData(predictionData) {
+  // 예측 데이터 포맷팅
+  const filteredDataPoints = predictionData.filter((dp) => {
+    const date = parseDate(dp.time);
+    return date.getMinutes() === 0 || date.getMinutes() === 30;
+  });
+  const predDO = filteredDataPoints.map((pred) => ({
+    x: parseDate(pred.time),
+    y: pred.pdo,
+  }));
+
+  return predDO;
 }
 
 function parseDate(timeString) {

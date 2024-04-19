@@ -7,6 +7,7 @@ import DataChart3 from "../components/charts/DataChart3";
 
 import "../styles/common/Home.css";
 import { NavLink } from "react-router-dom";
+import DataChartEx from "../components/charts/DataChartEx";
 
 class Home extends React.Component {
   render() {
@@ -15,7 +16,7 @@ class Home extends React.Component {
         <div className="data">
           <NavLink to="/water1" className="section">
             <h1>유입수</h1>
-            <DataChart />
+            <DataChartEx />
           </NavLink>
           <hr className="divider" />
           <NavLink to="/water2" className="section">

@@ -1,47 +1,102 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
+import "chartjs-adapter-date-fns";
+import { ko } from "date-fns/locale";
+
 import {
   Chart as ChartJS,
-  CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
-  Title,
   Tooltip,
   Legend,
   TimeScale,
 } from "chart.js";
-import { ko } from "date-fns/locale";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
+ChartJS.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
 
-// const labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; // 현재값 + 이후의 값
+const W1WT = () => {
+  const [chartData, setChartData] = useState({ datasets: [] });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const chartRef = useRef(null);
 
-const now = new Date();
+  const fetchChartData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response_data = await axios.get(
+        "http://13.209.98.150:7355/api/test?tankid=iw1"
+      );
+      const dataPoints = response_data.data; // API로부터 데이터 받기
 
-const dataPoints = [20, 19, 20, 21, 22, 23, 25, 26]; // 기존의 데이터 배열
+      // 데이터 포맷팅
+      const formattedDataSets = formatDataSets(dataPoints);
 
-const beforeAtNow = new Date(
-  now.getTime() - (dataPoints.length - 1) * 30 * 60 * 1000
-); // 현재 시간으로부터 2시간 전
+      console.log(formattedDataSets);
 
-const hourLater = new Date(now.getTime() + 1 * 30 * 60 * 1000);
-
-const formattedData = dataPoints.map((value, index) => {
-  return {
-    x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-    y: value,
+      setChartData({
+        datasets: formattedDataSets.map((dataset) => ({
+          label: "수온",
+          data: dataset,
+          backgroundColor: "#0CD3FF",
+          borderColor: "#0CD3FF",
+        })),
+      });
+    } catch (error) {
+      setError("데이터를 불러오는 데 실패했습니다.");
+      console.error(error);
+    }
+    setLoading(false);
   };
-});
+
+  useEffect(() => {
+    fetchChartData();
+    const chart = chartRef.current;
+    return () => {
+      chart?.destroy();
+    };
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <Line data={chartData} options={options} height={200} width={400} />
+      )}
+    </div>
+  );
+};
+
+export default W1WT;
+
+function formatDataSets(dataPoints) {
+  // 필터링하여 30분 간격의 데이터만 추출
+  const filteredDataPoints = dataPoints.filter((dp) => {
+    const date = parseDate(dp.time);
+    return date.getMinutes() === 0 || date.getMinutes() === 30;
+  });
+
+  const temperatures = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.wt,
+  }));
+
+  return [temperatures];
+}
+
+function parseDate(timeString) {
+  const year = parseInt(timeString.substring(0, 4), 10);
+  const month = parseInt(timeString.substring(4, 6), 10) - 1;
+  const day = parseInt(timeString.substring(6, 8), 10);
+  const hour = parseInt(timeString.substring(8, 10), 10);
+  const minute = parseInt(timeString.substring(10, 12), 10);
+
+  return new Date(year, month, day, hour, minute);
+}
 
 const options = {
   responsive: true,
@@ -55,20 +110,24 @@ const options = {
       },
       type: "time",
       time: {
-        unit: "minute",
-        stepSize: 30,
+        unit: "hour", // 'minute' 대신 'hour' 사용
+        stepSize: 0.5, // 30분 간격
+        tooltipFormat: "HH:mm",
+        displayFormats: {
+          hour: "HH:mm", // 시간 표시 형식
+          minute: "HH:mm", // 시간이 정시가 아닐 때 표시 형식
+        },
       },
-      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
-      max: hourLater.getTime(),
       adapters: {
         date: {
           locale: ko,
         },
       },
-      ticks: {
-        autoSkip: true,
-        maxTicksLimit: 8, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
-      },
+      min: new Date().setHours(new Date().getHours() - 6),
+      max: new Date().setHours(new Date().getHours() + 3),
+    },
+    y: {
+      beginAtZero: false,
     },
   },
   plugins: {
@@ -77,75 +136,3 @@ const options = {
     },
   },
 };
-
-// 초기 데이터 설정
-const initialData = {
-  // labels,
-  datasets: [
-    {
-      label: "수온",
-      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedData,
-      backgroundColor: "#0CD3FF",
-      borderColor: "#0CD3FF",
-    },
-  ],
-};
-
-const W1WT = () => {
-  // const [data, setData] = useState(() => {
-  //   const savedData = localStorage.getItem("chartData");
-  //   return savedData ? JSON.parse(savedData) : initialData;
-  // });
-
-  // useEffect(() => {
-  //   // 여기서 API 호출 및 데이터 설정
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "https://jsonplaceholder.typicode.com/posts"
-  //       );
-  //       const jsonData = await response.json();
-  //       console.log(jsonData);
-
-  //       // API로부터 받은 데이터를 기존 데이터에 적용
-  //       const newData = { ...initialData };
-
-  //       // 여기서 jsonData를 기반으로 newData.datasets의 각 데이터셋을 업데이트
-  //       // "수온" 데이터셋 업데이트
-  //       newData.datasets[0].data = jsonData.map((item) => item.id);
-  //       // "용존 산소 농도" 데이터셋 업데이트
-
-  //       // "pH 농도" 데이터셋 업데이트
-
-  //       // "염도" 데이터셋 업데이트
-
-  //       // "용존 산소 농도 예측값" 데이터셋 업데이트
-
-  //       // 데이터 저장
-  //       localStorage.setItem("chartData", JSON.stringify(newData));
-
-  //       // 전체 데이터 업데이트
-  //       setData(newData);
-  //     } catch (error) {
-  //       console.log("Error fetching data: ", error);
-  //     }
-  //   };
-
-  //   fetchData();
-
-  //   // 주기적으로 데이터 업데이트
-  //   const interval = setInterval(fetchData, 1800000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-  return (
-    <div>
-      <div style={{ width: 500, height: 400 }}>
-        <Line options={options} data={initialData} />
-      </div>
-    </div>
-  );
-};
-
-export default W1WT;
