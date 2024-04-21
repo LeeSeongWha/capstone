@@ -127,7 +127,7 @@ const options = {
       max: new Date().setHours(new Date().getHours() + 3),
     },
     y: {
-      beginAtZero: false,
+      beginAtZero: true,
     },
   },
   plugins: {
