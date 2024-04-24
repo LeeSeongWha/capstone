@@ -1,13 +1,12 @@
 import React from "react";
 
 import Button from "../components/Button";
-import DataChart from "../components/charts/DataChart";
+import DataChartEx from "../components/charts/DataChart1";
 import DataChart2 from "../components/charts/DataChart2";
 import DataChart3 from "../components/charts/DataChart3";
 
 import "../styles/common/Home.css";
 import { NavLink } from "react-router-dom";
-import DataChartEx from "../components/charts/DataChartEx";
 
 class Home extends React.Component {
   render() {

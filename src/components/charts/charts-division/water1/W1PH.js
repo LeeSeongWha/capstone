@@ -32,8 +32,6 @@ const W1WT = () => {
       // 데이터 포맷팅
       const formattedDataSets = formatDataSets(dataPoints);
 
-      console.log(formattedDataSets);
-
       setChartData({
         datasets: formattedDataSets.map((dataset) => ({
           label: "pH농도",

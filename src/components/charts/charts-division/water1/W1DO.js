@@ -34,17 +34,12 @@ const DataChartEx = () => {
       );
       const dataPointPred = response_pred.data;
 
-      console.log(dataPointPred);
-
       // 데이터 포맷팅
       const formattedDataSets = formatDataSets(dataPoints);
       const formattedPredData = formatPredictionData(dataPointPred);
 
-      console.log(formattedPredData);
-
       const formattedAllData = [...formattedDataSets, formattedPredData];
 
-      console.log(formattedAllData);
       setChartData({
         datasets: formattedAllData.map((dataset, index) => ({
           label: ["용존산소", "용존산소 예측값"][index],

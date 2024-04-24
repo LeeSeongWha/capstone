@@ -28,7 +28,6 @@ const DataChartEx = () => {
         "http://13.209.98.150:7355/api/test?tankid=iw1"
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
-      console.log(dataPoints);
 
       const response_pred = await axios.get(
         "http://13.209.98.150:7355/api/pdo?tankid=iw1"
@@ -41,7 +40,6 @@ const DataChartEx = () => {
 
       const formattedAllData = [...formattedDataSets, formattedPredData];
 
-      console.log(formattedAllData);
       setChartData({
         datasets: formattedAllData.map((dataset, index) => ({
           label: ["수온", "염도", "pH농도", "용존산소", "용존산소 예측값"][
@@ -167,7 +165,7 @@ const options = {
           locale: ko,
         },
       },
-      min: new Date().setHours(new Date().getHours() - 6),
+      min: new Date().setHours(new Date().getHours() - 12),
       max: new Date().setHours(new Date().getHours() + 3),
     },
     y: {
