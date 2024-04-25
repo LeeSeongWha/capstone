@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import "../../../../styles/chart/DataTextBox.css";
+
 const DataTextBox = () => {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ const DataTextBox = () => {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {dataPoints ? (
-        <div className="body">
+        <div className="textBody">
           <p>시각: {formatTime(dataPoints.time)}</p>
           <p>용존산소량: {dataPoints.wdo}</p>
           <p>수온: {dataPoints.wt}</p>
