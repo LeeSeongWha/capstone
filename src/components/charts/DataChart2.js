@@ -1,51 +1,138 @@
-import { useEffect, useState } from "react";
-import "chartjs-adapter-moment";
-import { ko } from "date-fns/locale";
+import React, { useRef, useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import axios from "axios";
+import "chartjs-adapter-date-fns";
+import { ko } from "date-fns/locale";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { Chart, registerables } from "chart.js";
 
-const now = new Date();
-const twoHoursLater = new Date(now.getTime() + 3 * 30 * 60 * 1000); // 현재 시간으로부터 2시간 후
+Chart.register(...registerables);
 
-function formatDataSets(dataPoints, beforeAtNow) {
-  return dataPoints.map((dataSet) =>
-    dataSet.map((value, index) => ({
-      x: new Date(beforeAtNow.getTime() + index * 30 * 60 * 1000), // 각 데이터 포인트에 대해 30분 간격으로 시간 설정
-      y: value,
-    }))
+const DataChart2 = () => {
+  const [chartData, setChartData] = useState({ datasets: [] });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const chartRef = useRef(null);
+
+  const fetchChartData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response_data = await axios.get(
+        "http://13.209.98.150:7355/api/test?tankid=rt1"
+      );
+      const dataPoints = response_data.data; // API로부터 데이터 받기
+
+      const response_pred = await axios.get(
+        "http://13.209.98.150:7355/api/pdo?tankid=rt1"
+      );
+      const dataPointPred = response_pred.data;
+
+      // 데이터 포맷팅
+      const formattedDataSets = formatDataSets(dataPoints);
+      const formattedPredData = formatPredictionData(dataPointPred);
+
+      const formattedAllData = [...formattedDataSets, formattedPredData];
+
+      setChartData({
+        datasets: formattedAllData.map((dataset, index) => ({
+          label: ["수온", "염도", "pH농도", "용존산소", "용존산소 예측값"][
+            index
+          ],
+          data: dataset,
+          backgroundColor: [
+            "#0CD3FF",
+            "#A9A6A7",
+            "#FFCA29",
+            "#FF8C00",
+            "#FF0000",
+          ][index],
+          borderColor: ["#0CD3FF", "#A9A6A7", "#FFCA29", "#FF8C00", "#FF0000"][
+            index
+          ],
+        })),
+      });
+    } catch (error) {
+      setError("데이터를 불러오는 데 실패했습니다.");
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchChartData();
+    const chart = chartRef.current;
+    return () => {
+      chart?.destroy();
+    };
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <Line data={chartData} options={options} height={300} width={400} />
+      )}
+    </div>
   );
+};
+
+export default DataChart2;
+
+function formatDataSets(dataPoints) {
+  // 필터링하여 30분 간격의 데이터만 추출
+  const filteredDataPoints = dataPoints.filter((dp) => {
+    const date = parseDate(dp.time);
+    return date.getMinutes() === 0 || date.getMinutes() === 30;
+  });
+
+  const temperatures = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.wt,
+  }));
+  const salinities = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.sa,
+  }));
+  const pHLevels = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.ph,
+  }));
+
+  const dissolvedOxygen = filteredDataPoints.map((dp) => ({
+    x: parseDate(dp.time),
+    y: dp.wdo,
+  }));
+
+  return [temperatures, salinities, pHLevels, dissolvedOxygen];
 }
 
-const dataPoints = [
-  [20, 19, 20, 21, 22, 23, 25, 26],
-  [7, 7.6, 7.5, 8.1, 7.9, 8, 8.1, 8.2],
-  [null, null, null, null, null, null, null, null, 7.6, 7.1],
-];
+function formatPredictionData(predictionData) {
+  // 예측 데이터 포맷팅
+  const filteredDataPoints = predictionData.filter((dp) => {
+    const date = parseDate(dp.time);
+    return date.getMinutes() === 0 || date.getMinutes() === 30;
+  });
+  const predDO = filteredDataPoints.map((pred) => ({
+    x: parseDate(pred.time),
+    y: pred.pdo,
+  }));
 
-const beforeAtNow = new Date(
-  now.getTime() - (dataPoints[0].length - 1) * 30 * 60 * 1000
-);
+  return predDO;
+}
 
-const formattedDataSets = formatDataSets(dataPoints, beforeAtNow);
+function parseDate(timeString) {
+  const year = parseInt(timeString.substring(0, 4), 10);
+  const month = parseInt(timeString.substring(4, 6), 10) - 1;
+  const day = parseInt(timeString.substring(6, 8), 10);
+  const hour = parseInt(timeString.substring(8, 10), 10);
+  const minute = parseInt(timeString.substring(10, 12), 10);
+
+  return new Date(year, month, day, hour, minute);
+}
 
 const options = {
   responsive: true,
@@ -59,23 +146,24 @@ const options = {
       },
       type: "time",
       time: {
-        unit: "minute",
-        stepSize: 30,
+        unit: "hour", // 'minute' 대신 'hour' 사용
+        stepSize: 0.5, // 30분 간격
+        tooltipFormat: "HH:mm",
+        displayFormats: {
+          hour: "HH:mm", // 시간 표시 형식
+          minute: "HH:mm", // 시간이 정시가 아닐 때 표시 형식
+        },
       },
-      min: beforeAtNow.getTime(), // 현재 시간을 원점으로 설정
-      max: twoHoursLater.getTime(),
       adapters: {
         date: {
           locale: ko,
         },
       },
-      ticks: {
-        autoSkip: true,
-        maxTicksLimit: 13, // 2시간 전부터 2시간 후까지 30분 간격으로 최대 8개의 눈금을 표시
-      },
+      min: new Date().setHours(new Date().getHours() - 12),
+      max: new Date().setHours(new Date().getHours() + 3),
     },
     y: {
-      beginAtZero: true,
+      beginAtZero: false,
     },
   },
   plugins: {
@@ -84,60 +172,3 @@ const options = {
     },
   },
 };
-
-// 초기 데이터 설정
-const initialData = {
-  // labels,
-  datasets: [
-    {
-      label: "수온",
-      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedDataSets[0],
-      backgroundColor: "#0CD3FF",
-      borderColor: "#0CD3FF",
-    },
-    {
-      label: "용존 산소량",
-      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedDataSets[1],
-      backgroundColor: "#a6120d",
-      borderColor: "#a6120d",
-    },
-    {
-      label: "용존 산소 예측량",
-      // data: Array(labels.length).fill(null), // 초기에는 모두 null로 채움
-      data: formattedDataSets[2],
-      backgroundColor: "#ff0000",
-      borderColor: "#ff0000",
-    },
-  ],
-};
-
-const DataChart2 = () => {
-  // const [data, setData] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("api-endpoint"); // api endpoint 받기
-  //       const jsonData = await response.json();
-  //       setData(jsonData);
-  //     } catch (error) {
-  //       console.log("Error fetching data: ", error);
-  //     }
-  //   };
-
-  //   fetchData();
-
-  //   const interval = setInterval(fetchData, 1800000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-  return (
-    <div>
-      <Line options={options} data={initialData} height={300} width={400} />
-    </div>
-  );
-};
-
-export default DataChart2;

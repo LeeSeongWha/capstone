@@ -4,16 +4,9 @@ import axios from "axios";
 import "chartjs-adapter-date-fns";
 import { ko } from "date-fns/locale";
 
-import {
-  Chart as ChartJS,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
+import { Chart, registerables } from "chart.js";
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
+Chart.register(...registerables);
 
 const W1WT = () => {
   const [chartData, setChartData] = useState({ datasets: [] });

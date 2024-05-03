@@ -4,7 +4,7 @@ import W1PH from "../components/charts/charts-division/water1/W1PH";
 import W1WT from "../components/charts/charts-division/water1/W1WT";
 import W1SALT from "../components/charts/charts-division/water1/W1SALT";
 import Button from "../components/Button";
-import DataTextBox from "../components/charts/charts-division/water1/DataTextBox";
+import DataTextBox1 from "../components/charts/charts-division/water1/DataTextBox1";
 
 import "../styles/chart/Water1.css";
 
@@ -14,7 +14,7 @@ class Water1 extends React.Component {
       <div className="body">
         <Button />
         <div className="dataBox">
-          <DataTextBox />
+          <DataTextBox1 />
         </div>
         <div className="dataCharts">
           <div className="dataChart">

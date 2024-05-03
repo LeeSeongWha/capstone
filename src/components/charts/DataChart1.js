@@ -4,17 +4,11 @@ import axios from "axios";
 import "chartjs-adapter-date-fns";
 import { ko } from "date-fns/locale";
 
-import {
-  Chart as ChartJS,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
+import { Chart, registerables } from "chart.js";
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
-const DataChartEx = () => {
+Chart.register(...registerables);
+
+const DataChart1 = () => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -86,7 +80,7 @@ const DataChartEx = () => {
   );
 };
 
-export default DataChartEx;
+export default DataChart1;
 
 function formatDataSets(dataPoints) {
   // 필터링하여 30분 간격의 데이터만 추출

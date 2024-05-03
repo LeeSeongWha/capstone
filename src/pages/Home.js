@@ -1,7 +1,6 @@
 import React from "react";
 
-import Button from "../components/Button";
-import DataChartEx from "../components/charts/DataChart1";
+import DataChart1 from "../components/charts/DataChart1";
 import DataChart2 from "../components/charts/DataChart2";
 import DataChart3 from "../components/charts/DataChart3";
 
@@ -15,7 +14,7 @@ class Home extends React.Component {
         <div className="data">
           <NavLink to="/water1" className="section">
             <h1>유입수</h1>
-            <DataChartEx />
+            <DataChart1 />
           </NavLink>
           <hr className="divider" />
           <NavLink to="/water2" className="section">
@@ -23,7 +22,7 @@ class Home extends React.Component {
             <DataChart2 />
           </NavLink>
           <hr className="divider" />
-          <NavLink to="water/3" className="section">
+          <NavLink to="/water3" className="section">
             <h1>수조2</h1>
             <DataChart3 />
           </NavLink>

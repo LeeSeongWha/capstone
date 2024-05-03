@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import "../../../../styles/chart/DataTextBox.css";
 
-const DataTextBox = () => {
+const DataTextBox3 = () => {
   const [dataPoints, setDataPoints] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const DataTextBox = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        "http://13.209.98.150:7355/api/test?tankid=iw1"
+        "http://13.209.98.150:7355/api/test?tankid=rt2"
       );
       setDataPoints(response_data.data[0]); // API로부터 데이터 받기
     } catch (error) {
@@ -57,4 +57,4 @@ const formatTime = (time) => {
   return `${year}-${month}-${day} ${hour}:${minute}`;
 };
 
-export default DataTextBox;
+export default DataTextBox3;

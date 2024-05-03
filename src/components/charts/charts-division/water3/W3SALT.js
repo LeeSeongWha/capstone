@@ -8,7 +8,7 @@ import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-const W1SALT = () => {
+const W3SALT = () => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ const W1SALT = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        "http://13.209.98.150:7355/api/test?tankid=iw1"
+        "http://13.209.98.150:7355/api/test?tankid=rt2"
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
 
@@ -62,7 +62,7 @@ const W1SALT = () => {
   );
 };
 
-export default W1SALT;
+export default W3SALT;
 
 function formatDataSets(dataPoints) {
   // 필터링하여 30분 간격의 데이터만 추출

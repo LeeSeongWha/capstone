@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import "chartjs-adapter-date-fns";
@@ -8,7 +8,7 @@ import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-const W1SALT = () => {
+const W3PH = () => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ const W1SALT = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        "http://13.209.98.150:7355/api/test?tankid=iw1"
+        "http://13.209.98.150:7355/api/test?tankid=rt2"
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
 
@@ -28,10 +28,10 @@ const W1SALT = () => {
 
       setChartData({
         datasets: formattedDataSets.map((dataset) => ({
-          label: "염도",
+          label: "pH농도",
           data: dataset,
-          backgroundColor: "#A9A6A7",
-          borderColor: "#A9A6A7",
+          backgroundColor: "#FFCA29",
+          borderColor: "#FFCA29",
         })),
       });
     } catch (error) {
@@ -62,7 +62,7 @@ const W1SALT = () => {
   );
 };
 
-export default W1SALT;
+export default W3PH;
 
 function formatDataSets(dataPoints) {
   // 필터링하여 30분 간격의 데이터만 추출
@@ -73,7 +73,7 @@ function formatDataSets(dataPoints) {
 
   const temperatures = filteredDataPoints.map((dp) => ({
     x: parseDate(dp.time),
-    y: dp.sa,
+    y: dp.ph,
   }));
 
   return [temperatures];
