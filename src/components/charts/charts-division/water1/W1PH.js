@@ -3,8 +3,10 @@ import { Line } from "react-chartjs-2";
 import axios from "axios";
 import "chartjs-adapter-date-fns";
 import { ko } from "date-fns/locale";
-
 import { Chart, registerables } from "chart.js";
+import { RotatingLines } from "react-loader-spinner";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 Chart.register(...registerables);
 
@@ -14,12 +16,12 @@ const W1PH = () => {
   const [error, setError] = useState(null);
   const chartRef = useRef(null);
 
-  const fetchChartData = async () => {
+  const fetchChartData = async (tankId) => {
     setLoading(true);
     setError(null);
     try {
       const response_data = await axios.get(
-        "http://13.209.98.150:7355/api/test?tankid=iw1"
+        `${API_BASE_URL}/test?tankid=${tankId}`
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
 
@@ -42,7 +44,7 @@ const W1PH = () => {
   };
 
   useEffect(() => {
-    fetchChartData();
+    fetchChartData("iw1");
     const chart = chartRef.current;
     return () => {
       chart?.destroy();
@@ -52,7 +54,17 @@ const W1PH = () => {
   return (
     <div>
       {loading ? (
-        <p>Loading...</p>
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          color="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
       ) : error ? (
         <p>{error}</p>
       ) : (
@@ -118,7 +130,8 @@ const options = {
       max: new Date().setHours(new Date().getHours() + 3),
     },
     y: {
-      beginAtZero: false,
+      min: 6,
+      max: 10,
     },
   },
   plugins: {

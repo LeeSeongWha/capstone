@@ -1,8 +1,8 @@
 import React from "react";
-import W2DO from "../components/charts/charts-division/water1/W1DO";
-import W2PH from "../components/charts/charts-division/water1/W1PH";
-import W2WT from "../components/charts/charts-division/water1/W1WT";
-import W2SALT from "../components/charts/charts-division/water1/W1SALT";
+import W2DO from "../components/charts/charts-division/water2/W2DO";
+import W2PH from "../components/charts/charts-division/water2/W2PH";
+import W2WT from "../components/charts/charts-division/water2/W2WT";
+import W2SALT from "../components/charts/charts-division/water2/W2SALT";
 import Button from "../components/Button";
 import DataTextBox2 from "../components/charts/charts-division/water2/DataTextBox2";
 

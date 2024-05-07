@@ -2,6 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import "../../../../styles/chart/DataTextBox.css";
+import { RotatingLines } from "react-loader-spinner";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const DataTextBox3 = () => {
   const [dataPoints, setDataPoints] = useState(null);
@@ -9,12 +12,12 @@ const DataTextBox3 = () => {
   const [error, setError] = useState(null);
   //   const chartRef = useRef(null);
 
-  const fetchData = async () => {
+  const fetchData = async (tankId) => {
     setLoading(true);
     setError(null);
     try {
       const response_data = await axios.get(
-        "http://13.209.98.150:7355/api/test?tankid=rt2"
+        `${API_BASE_URL}/test?tankid=${tankId}`
       );
       setDataPoints(response_data.data[0]); // API로부터 데이터 받기
     } catch (error) {
@@ -25,11 +28,23 @@ const DataTextBox3 = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData("rt2");
   }, []);
   return (
     <div>
-      {loading && <p>Loading...</p>}
+      {loading && (
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          color="grey"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      )}
       {error && <p>{error}</p>}
       {dataPoints ? (
         <div className="textBody">
@@ -40,7 +55,7 @@ const DataTextBox3 = () => {
           <p>염도: {dataPoints.sa}</p>
         </div>
       ) : (
-        <p>No data available.</p>
+        <p>데이터가 없습니다.</p>
       )}
     </div>
   );
