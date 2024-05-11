@@ -17,7 +17,7 @@ const DataTextBox2 = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        `${API_BASE_URL}/test?tankid=${tankId}`
+        `${API_BASE_URL}/water?tankid=${tankId}`
       );
       setDataPoints(response_data.data[0]); // API로부터 데이터 받기
     } catch (error) {

@@ -15,7 +15,7 @@ class Home extends React.Component {
         <div className="data">
           <NavLink to="/water1" className="section">
             <h1>유입수</h1>
-            <DataTextBox1 />
+            <DataChart1 />
           </NavLink>
           <hr className="divider" />
           <NavLink to="/water2" className="section">

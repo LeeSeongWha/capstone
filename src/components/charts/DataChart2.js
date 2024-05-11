@@ -21,7 +21,7 @@ const DataChart2 = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        `${API_BASE_URL}/test?tankid=${tankId}`
+        `${API_BASE_URL}/water?tankid=${tankId}`
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
 
