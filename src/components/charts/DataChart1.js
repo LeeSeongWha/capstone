@@ -100,7 +100,7 @@ function formatDataSets(dataPoints) {
   // 필터링하여 30분 간격의 데이터만 추출
   const filteredDataPoints = dataPoints.filter((dp) => {
     const date = parseDate(dp.time);
-    return date.getMinutes() === 0 || date.getMinutes() === 30;
+    return date.getMinutes() === 30 || date.getMinutes() === 0;
   });
 
   const temperatures = filteredDataPoints.map((dp) => ({
@@ -128,7 +128,7 @@ function formatPredictionData(predictionData) {
   // 예측 데이터 포맷팅
   const filteredDataPoints = predictionData.filter((dp) => {
     const date = parseDate(dp.time);
-    return date.getMinutes() === 0 || date.getMinutes() === 30;
+    return date.getMinutes() === 0 || date.getMinutes() === 20;
   });
   const predDO = filteredDataPoints.map((pred) => ({
     x: parseDate(pred.time),
@@ -161,7 +161,7 @@ const options = {
       type: "time",
       time: {
         unit: "hour", // 'minute' 대신 'hour' 사용
-        stepSize: 0.5, // 30분 간격
+        stepSize: 1, // 30분 간격
         tooltipFormat: "HH:mm",
         displayFormats: {
           hour: "HH:mm", // 시간 표시 형식
