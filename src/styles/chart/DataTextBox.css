@@ -35,6 +35,11 @@
     color: #007BFF; /* 첫 문단 색상 */
 }
 
+.textBody p:last-of-type {
+    font-weight: bold;
+    color: red;
+}
+
 .textBodyOverview p {
     font-size: 33px; /* 글꼴 크기 */
     color: #333; /* 글꼴 색상 */

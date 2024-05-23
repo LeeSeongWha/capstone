@@ -19,7 +19,14 @@ const DataTextBox2 = () => {
       const response_data = await axios.get(
         `${API_BASE_URL}/water?tankid=${tankId}`
       );
-      setDataPoints(response_data.data[0]); // API로부터 데이터 받기
+      const response_data_pred = await axios.get(
+        `${API_BASE_URL}/pdo?tankid=${tankId}`
+      );
+      const combDataPoints = [
+        response_data.data[0],
+        response_data_pred.data[0],
+      ];
+      setDataPoints(combDataPoints); // API로부터 데이터 받기
     } catch (error) {
       setError("데이터를 불러오는 데 실패했습니다.");
       console.error(error);
@@ -48,11 +55,12 @@ const DataTextBox2 = () => {
       {error && <p>{error}</p>}
       {dataPoints ? (
         <div className="textBody">
-          <p>시각: {formatTime(dataPoints.time)}</p>
-          <p>용존산소량: {dataPoints.wdo}</p>
-          <p>수온: {dataPoints.wt}</p>
-          <p>pH농도: {dataPoints.ph}</p>
-          <p>염도: {dataPoints.sa}</p>
+          <p>시각: {formatTime(dataPoints[0].time)}</p>
+          <p>수온: {dataPoints[0].wt}</p>
+          <p>pH농도: {dataPoints[0].ph}</p>
+          <p>염도: {dataPoints[0].sa}</p>
+          <p>용존산소량: {dataPoints[0].wdo}</p>
+          <p>용존산소량 예측값: {dataPoints[1].pdo}</p>
         </div>
       ) : (
         <p>데이터가 없습니다.</p>
