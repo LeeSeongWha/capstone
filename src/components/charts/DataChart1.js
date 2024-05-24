@@ -54,6 +54,8 @@ const DataChart1 = () => {
           borderColor: ["#0CD3FF", "#A9A6A7", "#FFCA29", "#FF8C00", "#FF0000"][
             index
           ],
+          pointRadius: 1.5,
+          borderWidth: 1,
         })),
       });
     } catch (error) {
@@ -128,7 +130,7 @@ function formatPredictionData(predictionData) {
   // 예측 데이터 포맷팅
   const filteredDataPoints = predictionData.filter((dp) => {
     const date = parseDate(dp.time);
-    return date.getMinutes() === 0 || date.getMinutes() === 20;
+    return date.getMinutes() === 0 || date.getMinutes() === 30;
   });
   const predDO = filteredDataPoints.map((pred) => ({
     x: parseDate(pred.time),

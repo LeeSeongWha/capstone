@@ -52,6 +52,8 @@ const DataChart2 = () => {
           borderColor: ["#0CD3FF", "#A9A6A7", "#FFCA29", "#FF8C00", "#FF0000"][
             index
           ],
+          pointRadius: 1.5,
+          borderWidth: 1,
         })),
       });
     } catch (error) {
