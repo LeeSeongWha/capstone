@@ -17,15 +17,12 @@ const DataTextBox2 = () => {
     setError(null);
     try {
       const response_data = await axios.get(
-        `${API_BASE_URL}/water?tankid=${tankId}`
+        `${API_BASE_URL}/waterone?tankid=${tankId}`
       );
       const response_data_pred = await axios.get(
         `${API_BASE_URL}/pdo?tankid=${tankId}`
       );
-      const combDataPoints = [
-        response_data.data[0],
-        response_data_pred.data[0],
-      ];
+      const combDataPoints = [response_data.data, response_data_pred.data[0]];
       setDataPoints(combDataPoints); // API로부터 데이터 받기
     } catch (error) {
       setError("데이터를 불러오는 데 실패했습니다.");
