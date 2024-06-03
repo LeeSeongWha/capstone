@@ -53,11 +53,11 @@ const DataTextBox2 = () => {
       {dataPoints ? (
         <div className="textBody">
           <p>시각: {formatTime(dataPoints[0].time)}</p>
-          <p>수온: {dataPoints[0].wt}</p>
+          <p>수온: {dataPoints[0].wt} °C</p>
           <p>pH농도: {dataPoints[0].ph}</p>
-          <p>염도: {dataPoints[0].sa}</p>
-          <p>용존산소량: {dataPoints[0].wdo}</p>
-          <p>용존산소량 예측값: {dataPoints[1].pdo}</p>
+          <p>염도: {dataPoints[0].sa} psu</p>
+          <p>용존산소량: {dataPoints[0].wdo} ㎎/L</p>
+          <p>용존산소량 예측값: {dataPoints[1].pdo} ㎎/L</p>
         </div>
       ) : (
         <p>데이터가 없습니다.</p>

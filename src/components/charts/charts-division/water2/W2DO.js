@@ -152,10 +152,7 @@ const options = {
       min: new Date().setHours(new Date().getHours() - 6),
       max: new Date().setHours(new Date().getHours() + 3),
     },
-    y: {
-      max: 16,
-      min: 4,
-    },
+    y: {},
   },
   plugins: {
     legend: {
