@@ -58,7 +58,7 @@ const DataTextBox3 = () => {
           <p>pH농도: {dataPoints[0].ph}</p>
           <p>염도: {dataPoints[0].sa} psu</p>
           <p>용존산소량: {dataPoints[0].wdo} ㎎/L</p>
-          <p>용존산소량 예측값: {dataPoints[1].pdo} ㎎/L</p>
+          <p>용존산소량 예측값(30분 뒤): {dataPoints[1].pdo} ㎎/L</p>
         </div>
       ) : (
         <p>데이터가 없습니다.</p>
