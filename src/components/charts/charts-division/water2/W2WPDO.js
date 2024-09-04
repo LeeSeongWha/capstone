@@ -10,7 +10,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 Chart.register(...registerables);
 
-const W1WPDO = () => {
+const W2WPDO = () => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -45,7 +45,7 @@ const W1WPDO = () => {
   };
 
   useEffect(() => {
-    fetchChartData("iw1");
+    fetchChartData("rt1");
     const chart = chartRef.current;
     return () => {
       chart?.destroy();
@@ -75,7 +75,7 @@ const W1WPDO = () => {
   );
 };
 
-export default W1WPDO;
+export default W2WPDO;
 
 function formatPredictionData(predictionData) {
   // 예측 데이터 포맷팅
