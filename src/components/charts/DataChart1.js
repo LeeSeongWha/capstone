@@ -24,7 +24,6 @@ const DataChart1 = () => {
         `${API_BASE_URL}/water?tankid=${tankId}`
       );
       const dataPoints = response_data.data; // API로부터 데이터 받기
-
       console.log(dataPoints);
 
       const response_pred = await axios.get(
